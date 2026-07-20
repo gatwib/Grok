@@ -73,7 +73,7 @@ Isi yang **wajib / biasa dipakai** orang yang clone repo:
 | `ROUTER9_PASS` | opsional | `your_password` | Password login 9Router |
 | `HEADLESS` | opsional | `false` | `false` = jendela Chrome (recommended). `true` sering kena CF |
 | `CHROME_PATH` | opsional | path ke `chrome.exe` / `google-chrome` | Kosong = auto-detect |
-| `OUT_FILE` | opsional | `asukabeh.txt` | File output akun (default `asukabeh.txt`) |
+| `OUT_FILE` | opsional | `email.txt` | File output akun (default `email.txt`) |
 
 ### Contoh `.env` minimal (user)
 
@@ -112,7 +112,7 @@ Menu:
 
 ```
 1) Create akun Grok (signup)     → tanya berapa akun
-2) Add akun ke 9Router           → dari asukabeh.txt, tanya berapa terakhir
+2) Add akun ke 9Router           → dari email.txt, tanya berapa terakhir
 0) Exit
 ```
 
@@ -124,7 +124,7 @@ Menu:
 4. Nama + password  
 5. Turnstile (extension sealed → unlock via `SEAL_UNLOCK_URL` + `SEAL_TOKEN`)  
 6. Submit → grok.com  
-7. Save SSO → `asukabeh.txt`  
+7. Save SSO → `email.txt`  
 8. Opsional: OAuth device flow → 9Router  
 
 ---

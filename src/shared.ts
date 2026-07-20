@@ -28,7 +28,7 @@ if (PASSWORD.length < 16) {
   );
 }
 export const ENC_DIR = resolve(ROOT, 'turnstile');
-export const OUT = join(ROOT, envOr('OUT_FILE', 'asukabeh.txt'));
+export const OUT = join(ROOT, envOr('OUT_FILE', 'email.txt'));
 export const SIGNUP = 'https://accounts.x.ai/sign-up?redirect=grok-com';
 export const TEMPMAIL_PROVIDERS = envOr('TEMPMAIL_PROVIDER', '')
   .split(/[,|;]+/)

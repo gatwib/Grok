@@ -8,7 +8,7 @@ import { runAddRouterMenu } from './add-router.js';
 async function main(): Promise<void> {
   banner('WANGLINS SIGNUP RUNNER');
   process.stdout.write(`  ${GRN}[1]${RST} Create Grok accounts\n`);
-  process.stdout.write(`  ${GRN}[2]${RST} Add accounts to 9Router (from asukabeh.txt)\n`);
+  process.stdout.write(`  ${GRN}[2]${RST} Add accounts to 9Router (from email.txt)\n`);
   process.stdout.write(`  ${DIM}[0]${RST} Exit\n`);
   process.stdout.write(`${DIM}${line('-')}${RST}\n`);
 

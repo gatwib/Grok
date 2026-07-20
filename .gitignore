@@ -9,7 +9,7 @@ dist/
 .dev.vars
 
 # runtime output
-asukabeh.txt
+email.txt
 list.txt
 *.log
 
