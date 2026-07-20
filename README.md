@@ -16,6 +16,10 @@
 ![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey?logo=linux&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
+<br>
+
+![Dashboard](public/image.png)
+
 </div>
 
 ---
