@@ -1,0 +1,33 @@
+{
+  "name": "wanglin-s-grok-signup",
+  "version": "1.0.0",
+  "description": "WangLinS — Auto-register Grok (x.ai) accounts. Puppeteer-core + real Chrome.",
+  "author": "WangLinS",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "wanglin-s-signup": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "signup": "tsx src/index.ts",
+    "seal": "tsx src/seal-cli.ts",
+    "seal:verify": "tsx src/seal-cli.ts --verify",
+    "seal:selfcheck": "tsx src/seal-crypto.selfcheck.ts"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@wanglinsaputra/tempmail-wrapper": "^1.2.0",
+    "puppeteer-core": "^25.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

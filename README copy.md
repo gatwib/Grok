@@ -14,7 +14,7 @@
 ![Puppeteer](https://img.shields.io/badge/Puppeteer--core-latest-green?logo=puppeteer&logoColor=white)
 ![Chrome](https://img.shields.io/badge/Chrome-Stable-orange?logo=googlechrome&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Linux-lightgrey?logo=linux&logoColor=white)
-![License](https://img.shields.io/badge/License-Apache%202.0-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 </div>
 
@@ -142,52 +142,8 @@ Menu:
 
 ---
 
-## License
-
-Proyek ini dilisensikan di bawah **Apache License 2.0**.
-
-Lihat file [`LICENSE`](./LICENSE) untuk teks lengkap.
-
-```
-Copyright [yyyy] [name of copyright owner]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
-
----
-
-## Disclaimer
-
-**Baca sebelum pakai.**
-
-1. **Tujuan edukasi / riset pribadi saja.** Repo ini disediakan sebagai contoh otomasi browser (Puppeteer, flow registrasi, integrasi OAuth). Bukan produk komersial, bukan layanan akun, bukan undangan melanggar aturan pihak ketiga.
-
-2. **Kepatuhan ToS & hukum = tanggung jawabmu.** Otomasi pendaftaran, temp mail, atau bypass challenge (mis. Turnstile) **bisa melanggar** Terms of Service x.ai / Grok, Cloudflare, provider email, atau hukum setempat. Kamu wajib cek dan patuhi aturan yang berlaku di yurisdiksimu. Author **tidak** menyetujui, mendorong, atau menjamin legalitas penggunaan untuk mass-register, jual-beli akun, spam, fraud, atau penyalahgunaan layanan.
-
-3. **Tidak ada jaminan.** Software diberikan **AS IS**, tanpa warranty tersurat maupun tersirat (termasuk merchantability, fitness for a particular purpose, non-infringement) — selaras [Apache License 2.0](./LICENSE) Pasal 7.
-
-4. **Batasan tanggung jawab.** Author / contributor **tidak bertanggung jawab** atas: ban akun, loss data, claim pihak ketiga, denda, tuntutan, kerusakan langsung/tidak langsung, atau konsekuensi lain dari penggunaan, penyalahgunaan, atau ketidakmampuan memakai software ini — selaras [Apache License 2.0](./LICENSE) Pasal 8.
-
-5. **Kredensial & token.** Jangan commit `.env`, password, cookie SSO, atau `SEAL_TOKEN`. Token unlock bersifat pribadi; penyalahgunaan token = tanggung jawab pemegang token.
-
-6. **Pihak ketiga.** Nama/merek x.ai, Grok, Chrome, Cloudflare, 9Router, dll. milik pemiliknya masing-masing. Repo ini **tidak** berafiliasi, disponsori, atau disetujui oleh mereka.
-
-Dengan meng-clone, menginstal, atau menjalankan software ini, kamu menyatakan sudah membaca Disclaimer ini + [`LICENSE`](./LICENSE) dan menanggung sendiri risiko penggunaan.
-
----
-
 <div align="center">
 
-**WangLinS** · Educational / research use only. See [Disclaimer](#disclaimer) & [LICENSE](./LICENSE).
+**WangLinS** · Educational purposes only.
 
 </div>

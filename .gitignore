@@ -1,0 +1,29 @@
+# deps / build
+node_modules/
+dist/
+
+# secrets & local config
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# runtime output
+asukabeh.txt
+list.txt
+*.log
+
+# turnstile — plain source private; sealed blob is public
+turnstile/script.js
+turnstile/script.js.local
+turnstile/*.plain.js
+
+# cloudflare wrangler local state
+.wrangler/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
