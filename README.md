@@ -73,7 +73,7 @@ Isi yang **wajib / biasa dipakai** orang yang clone repo:
 | `TEMPMAIL_PROVIDER` | ✅ | `ncaori,zoromail` | Provider temp mail. Multi: pisah koma. Proven OK: `ncaori` |
 | `SEAL_UNLOCK_URL` | ✅ (signup) | `https://wanglins.6n6.web.id` | API unlock extension Turnstile (sealed) |
 | `SEAL_TOKEN` | ✅ (signup) | *(minta ke author)* | Bearer token unlock. Tanpa ini signup gagal load extension |
-| `ROUTER9_URL` | opsional | `http://127.0.0.1:20128` | Base URL 9Router. Perlu kalau mau add akun ke 9Router |
+| `ROUTER9_URL` | opsional | `http://localhost:20128` | Base URL 9Router. Perlu kalau mau add akun ke 9Router |
 | `ROUTER9_PASS` | opsional | `your_password` | Password login 9Router |
 | `HEADLESS` | opsional | `false` | `false` = jendela Chrome (recommended). `true` sering kena CF |
 | `CHROME_PATH` | opsional | path ke `chrome.exe` / `google-chrome` | Kosong = auto-detect |
@@ -90,7 +90,7 @@ SEAL_UNLOCK_URL=https://wanglins.6n6.web.id
 SEAL_TOKEN=e4k-0Dil5dKU82VlBLzp50AdWmWVPCdc
 
 # Opsional — hanya kalau pakai menu add ke 9Router
-ROUTER9_URL=http://127.0.0.1:20128
+ROUTER9_URL=http://localhost:20128
 ROUTER9_PASS=your_9router_password
 ```
 
