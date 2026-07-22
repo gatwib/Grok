@@ -42,22 +42,30 @@ interface WorkerMail {
 }
 
 function randomLocal(): string {
-  // alamat gaya nama orang Indonesia: nama.belakang + angka (natural, anti-bentrok)
+  // alamat gaya nama orang Indonesia: namadepan.namabelakang (TANPA angka).
+  // Selalu pakai titik sebagai pemisah supaya create-account bisa isi
+  // First name + Last name terpisah dengan benar. Domain sendiri -> tak perlu angka.
   const first = [
     'budi', 'agus', 'dewi', 'rina', 'putri', 'andi', 'sari', 'dian', 'eka', 'rizki',
-    'yuni', 'fitri', 'joko', 'wawan', 'nur', 'indah', 'bayu', 'hendra', 'ratna', 'adit',
-    'lestari', 'wahyu', 'sinta', 'reza', 'fajar', 'maya', 'galih', 'tika', 'irfan', 'novi',
-    'ahmad', 'siti', 'dwi', 'ayu', 'arif', 'linda', 'yoga', 'citra', 'doni', 'mega',
+    'yuni', 'fitri', 'joko', 'wawan', 'indah', 'bayu', 'hendra', 'ratna', 'adit', 'anisa',
+    'wahyu', 'sinta', 'reza', 'fajar', 'maya', 'galih', 'tika', 'irfan', 'novi', 'ahmad',
+    'siti', 'dwi', 'ayu', 'arif', 'linda', 'yoga', 'citra', 'doni', 'mega', 'rama',
+    'nadia', 'fauzan', 'salsa', 'ridwan', 'aldi', 'gita', 'rangga', 'intan', 'bagas', 'vina',
   ];
+  // nama belakang = nama orang juga (marga/nama kedua yang umum di Indonesia)
   const last = [
     'santoso', 'wijaya', 'saputra', 'pratama', 'nugroho', 'kusuma', 'hidayat', 'permana',
-    'setiawan', 'utomo', 'lestari', 'purnama', 'ramadhan', 'firmansyah', 'gunawan', 'susanto',
+    'setiawan', 'utomo', 'purnama', 'ramadhan', 'firmansyah', 'gunawan', 'susanto',
     'wibowo', 'maulana', 'anggraini', 'haryanto', 'suryani', 'prasetyo', 'handoko', 'rahayu',
+    'rahma', 'putra', 'lestari', 'safitri', 'nugraha', 'wati', 'hakim', 'yulianti',
+    'kurniawan', 'oktaviani', 'setiadi', 'wardana', 'fitriani', 'hermawan',
   ];
   const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
-  const sep = Math.random() < 0.5 ? '.' : '';       // budi.santoso atau budisantoso
-  const num = Math.floor(Math.random() * 9000) + 100; // 3-4 digit, mirip tahun/angka acak
-  return `${pick(first)}${sep}${pick(last)}${num}`;
+  let f = pick(first);
+  let l = pick(last);
+  // hindari nama depan = belakang (misal "lestari.lestari")
+  while (l === f) l = pick(last);
+  return `${f}.${l}`;
 }
 
 async function fetchInbox(address: string): Promise<WorkerMail[]> {

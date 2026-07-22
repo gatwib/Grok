@@ -190,7 +190,7 @@ async function flow(page: Page): Promise<AccountData> {
   const local = addr.split('@')[0];
   const parts = local.split(/[._\-]/);
   const given = (parts[0] || 'User').charAt(0).toUpperCase() + (parts[0] || 'User').slice(1).toLowerCase();
-  const famRaw = parts.length > 1 ? parts[1] : 'AsuKabeh';
+  const famRaw = parts.length > 1 ? parts[1] : 'Putra';
   const family = famRaw.charAt(0).toUpperCase() + famRaw.slice(1).toLowerCase();
   wait(`${given} ${family}`);
   await fillInput(page, SEL_GIVEN, given);
