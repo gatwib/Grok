@@ -6,7 +6,7 @@ import { mkdirSync, appendFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  PASSWORD, OUT, SIGNUP,
+  PASSWORD, OUT, SIGNUP, AUTO_ADD_9ROUTER,
   type AccountData, type Result,
   findChrome, launchChrome, hardenPage, clearBrowserCookies, getAllCookies,
   fillInput, clickText, tryClickText, pageLooksBlocked,
@@ -558,13 +558,21 @@ export async function runCreateAccounts(count: number, workers = 1): Promise<voi
     const successAccs = results.filter((r): r is AccountData => !!r && 'email' in r);
     if (successAccs.length) {
       process.stdout.write('\n');
-      let ans = '';
-      try {
-        ans = (await ask(`  ${YEL}[?]${RST} Add ${successAccs.length} account(s) to 9router? [y/N] `)).trim().toLowerCase();
-      } catch {
-        ans = '';
+      if (AUTO_ADD_9ROUTER) {
+        // otomatis: langsung tambah ke 9router tanpa konfirmasi y/N
+        process.stdout.write(
+          `  ${YEL}[auto]${RST} Adding ${successAccs.length} account(s) to 9router...\n`,
+        );
+        await addToRouter(successAccs);
+      } else {
+        let ans = '';
+        try {
+          ans = (await ask(`  ${YEL}[?]${RST} Add ${successAccs.length} account(s) to 9router? [y/N] `)).trim().toLowerCase();
+        } catch {
+          ans = '';
+        }
+        if (ans === 'y') await addToRouter(successAccs);
       }
-      if (ans === 'y') await addToRouter(successAccs);
     }
   } finally {
     cleanupSealedTemps();

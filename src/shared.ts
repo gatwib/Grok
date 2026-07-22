@@ -42,6 +42,8 @@ export const CHROME_PATH = envOr('CHROME_PATH', '');
 export const GATWIB_MAIL_WORKER_URL = envOr('GATWIB_MAIL_WORKER_URL', '').replace(/\/$/, '');
 export const GATWIB_MAIL_API_KEY = envOr('GATWIB_MAIL_API_KEY', '');
 export const GATWIB_MAIL_DOMAIN = envOr('GATWIB_MAIL_DOMAIN', 'gatwib.my.id');
+// Auto-add akun ke 9router tanpa konfirmasi y/N (default: true = otomatis)
+export const AUTO_ADD_9ROUTER = !/^(0|false|no|off)$/i.test(envOr('AUTO_ADD_9ROUTER', 'true'));
 export const HEADLESS = /^(1|true|yes)$/i.test(envOr('HEADLESS', ''));
 
 export interface AccountData {
