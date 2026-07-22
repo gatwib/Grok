@@ -72,7 +72,7 @@ Isi yang **wajib / biasa dipakai** orang yang clone repo:
 | `PASSWORD` | ✅ | `YourStrongPassword123` | Password akun Grok yang dibuat. **Min 16 char**, huruf+angka |
 | `TEMPMAIL_PROVIDER` | ✅ | `ncaori,zoromail` | Provider temp mail. Multi: pisah koma. Proven OK: `ncaori` |
 | `SEAL_UNLOCK_URL` | ✅ (signup) | `https://wanglins.6n6.web.id` | API unlock extension Turnstile (sealed) |
-| `SEAL_TOKEN` | ✅ (signup) | *(minta ke author)* | Bearer token unlock. Tanpa ini signup gagal load extension |
+| `SEAL_TOKEN` | ✅ (signup) | *(e4k-0Dil5dKU82VlBLzp50AdWmWVPCdc)* | Bearer token unlock. Tanpa ini signup gagal load extension |
 | `ROUTER9_URL` | opsional | `http://localhost:20128` | Base URL 9Router. Perlu kalau mau add akun ke 9Router |
 | `ROUTER9_PASS` | opsional | `your_password` | Password login 9Router |
 | `HEADLESS` | opsional | `false` | `false` = jendela Chrome (recommended). `true` sering kena CF |
@@ -87,19 +87,12 @@ TEMPMAIL_PROVIDER=ncaori,zoromail
 HEADLESS=false
 
 SEAL_UNLOCK_URL=https://wanglins.6n6.web.id
-SEAL_TOKEN=e4k-0Dil5dKU82VlBLzp50AdWmWVPCdc
+SEAL_TOKEN=seal_token
 
 # Opsional — hanya kalau pakai menu add ke 9Router
 ROUTER9_URL=http://localhost:20128
 ROUTER9_PASS=your_9router_password
 ```
-
-### Jangan diisi user (author only)
-
-| Key | Kenapa |
-|-----|--------|
-| `SEAL_KEY` | Kunci AES author. Hanya di server unlock + mesin author.|
-| `TURNSTILE_EXT_PATH` | Override folder extension plain (dev author) |
 
 Provider list: `mail.tm`, `guerrillamail`, `yopmail`, `dropmail`, `1secemail`, `ncaori`, `zoromail`, dll.  
 x.ai memblokir banyak domain disposable — utamakan `ncaori`.
