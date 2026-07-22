@@ -1,11 +1,12 @@
 import type { Browser, Cookie, Page } from 'puppeteer-core';
 import { createProvider } from '@wanglinsaputra/tempmail-wrapper';
+import { createGatwibProvider } from './gatwib-mail.js';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { mkdirSync, appendFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  PASSWORD, OUT, SIGNUP, TEMPMAIL_PROVIDERS,
+  PASSWORD, OUT, SIGNUP,
   type AccountData, type Result,
   findChrome, launchChrome, hardenPage, clearBrowserCookies, getAllCookies,
   fillInput, clickText, tryClickText, pageLooksBlocked,
@@ -62,13 +63,6 @@ function extractOtp(text: string): string | null {
   return null;
 }
 
-let mailProviderIdx = 0;
-const BLOCKED_EMAIL_DOMAINS = new Set([
-  'mailto.plus', 'tempmail.plus', 'yopmail.com', 'guerrillamail.com',
-  'guerrillamail.net', 'sharklasers.com', 'mailinator.com', '10minutemail.com',
-  'temp-mail.org', 'throwaway.email',
-]);
-
 type TempMailClient = ReturnType<typeof createProvider>;
 
 class Mail {
@@ -77,38 +71,15 @@ class Mail {
   addr = '';
 
   async create(): Promise<string> {
-    const providers = TEMPMAIL_PROVIDERS.filter(Boolean);
-    if (!providers.length) throw new Error('no TEMPMAIL_PROVIDER configured');
-    const n = providers.length;
-    const start = mailProviderIdx % n;
-    const errors: string[] = [];
-    for (let i = 0; i < n; i++) {
-      const name = providers[(start + i) % n];
-      try {
-        this.client = createProvider(name);
-        this.provider = name;
-        this.addr = await this.client.generateEmail();
-        const domain = this.addr.split('@')[1]?.toLowerCase() || '';
-        if (BLOCKED_EMAIL_DOMAINS.has(domain)) {
-          errors.push(`${name}: blocked domain ${domain}`);
-          continue;
-        }
-        mailProviderIdx = (start + i + 1) % n;
-        return this.addr;
-      } catch (e) {
-        const msg = e instanceof Error ? e.message : String(e);
-        errors.push(`${name}: ${msg}`);
-      }
-    }
-    throw new Error(`all tempmail providers failed: ${errors.join(' | ')}`);
+    // pakai provider email pribadi gatwib.my.id (bukan tempmail publik)
+    this.client = createGatwibProvider() as unknown as TempMailClient;
+    this.provider = 'gatwib-mail';
+    this.addr = await this.client.generateEmail();
+    return this.addr;
   }
 
   private async readDetail(msgId: string) {
-    try {
-      return await this.client.readMessage(`${msgId}:${this.addr}`);
-    } catch {
-      return await this.client.readMessage(msgId);
-    }
+    return await this.client.readMessage(msgId);
   }
 
   async peekCode(): Promise<string | null> {
@@ -178,7 +149,7 @@ async function flow(page: Page): Promise<AccountData> {
   ok('email form');
 
   step(3, 'Create temp email');
-  wait(`providers: ${TEMPMAIL_PROVIDERS.filter(Boolean).join(' -> ') || '(none)'} (rotate #${mailProviderIdx % Math.max(1, TEMPMAIL_PROVIDERS.filter(Boolean).length)})`);
+  wait(`provider: gatwib-mail (gatwib.my.id)`);
   const mail = new Mail();
   const addr = await mail.create();
   wait(`${addr}  ${DIM}via ${mail.provider}${RST}`);
