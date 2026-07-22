@@ -29,7 +29,38 @@ if (PASSWORD.length < 16) {
 }
 export const ENC_DIR = resolve(ROOT, 'turnstile');
 export const OUT = join(ROOT, envOr('OUT_FILE', 'email.txt'));
-export const SIGNUP = 'https://accounts.x.ai/sign-up?redirect=grok-com';
+// URL signup — configurable via .env (kalau Grok ganti URL, edit .env saja, tak perlu ubah kode)
+export const SIGNUP = envOr('SIGNUP_URL', 'https://accounts.x.ai/sign-up?redirect=grok-com');
+// Selektor field — configurable + multi-fallback (dipisah koma; kalau Grok ganti nama field, tambah di .env)
+export const SEL_EMAIL = envOr(
+  'SEL_EMAIL',
+  'input[type=email], input[name=email], input[data-testid=email], input[autocomplete=email], input[id*=email i], input[placeholder*=email i]',
+);
+export const SEL_CODE = envOr(
+  'SEL_CODE',
+  'input[name=code], input[data-testid=code], input[autocomplete=one-time-code], input[name*=otp i], input[name*=verif i], input[id*=code i], input[placeholder*=code i]',
+);
+export const SEL_GIVEN = envOr(
+  'SEL_GIVEN',
+  'input[name=givenName], input[name=firstName], input[data-testid=givenName], input[autocomplete=given-name], input[id*=given i], input[id*=first i]',
+);
+export const SEL_FAMILY = envOr(
+  'SEL_FAMILY',
+  'input[name=familyName], input[name=lastName], input[data-testid=familyName], input[autocomplete=family-name], input[id*=family i], input[id*=last i]',
+);
+export const SEL_PASSWORD = envOr(
+  'SEL_PASSWORD',
+  'input[name=password], input[type=password], input[data-testid=password], input[autocomplete*=password], input[id*=password i]',
+);
+// Teks tombol "Sign up with email" — configurable (dipisah | )
+export const TXT_EMAIL_BTN = envOr(
+  'TXT_EMAIL_BTN',
+  'Sign up with email|Sign up with Email|Continue with email|Continue with Email|Sign up|Continue|Email',
+).split('|').map((s) => s.trim()).filter(Boolean);
+export const TXT_SUBMIT_BTN = envOr(
+  'TXT_SUBMIT_BTN',
+  'Sign up|Continue|Submit|Next|Verify',
+).split('|').map((s) => s.trim()).filter(Boolean);
 export const TEMPMAIL_PROVIDERS = envOr('TEMPMAIL_PROVIDER', '')
   .split(/[,|;]+/)
   .map((s) => s.trim())
@@ -44,6 +75,8 @@ export const GATWIB_MAIL_API_KEY = envOr('GATWIB_MAIL_API_KEY', '');
 export const GATWIB_MAIL_DOMAIN = envOr('GATWIB_MAIL_DOMAIN', 'gatwib.my.id');
 // Auto-add akun ke 9router tanpa konfirmasi y/N (default: true = otomatis)
 export const AUTO_ADD_9ROUTER = !/^(0|false|no|off)$/i.test(envOr('AUTO_ADD_9ROUTER', 'true'));
+// Timeout tunggu Turnstile solve (detik) — laptop low-spec butuh lebih lama; default 90
+export const TURNSTILE_TIMEOUT_S = Math.max(20, parseInt(envOr('TURNSTILE_TIMEOUT_S', '90'), 10) || 90);
 export const HEADLESS = /^(1|true|yes)$/i.test(envOr('HEADLESS', ''));
 
 export interface AccountData {

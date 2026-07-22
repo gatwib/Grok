@@ -6,7 +6,8 @@ import { mkdirSync, appendFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  PASSWORD, OUT, SIGNUP, AUTO_ADD_9ROUTER,
+  PASSWORD, OUT, SIGNUP, AUTO_ADD_9ROUTER, TURNSTILE_TIMEOUT_S,
+  SEL_EMAIL, SEL_CODE, SEL_GIVEN, SEL_FAMILY, SEL_PASSWORD, TXT_EMAIL_BTN, TXT_SUBMIT_BTN,
   type AccountData, type Result,
   findChrome, launchChrome, hardenPage, clearBrowserCookies, getAllCookies,
   fillInput, clickText, tryClickText, pageLooksBlocked,
@@ -128,10 +129,10 @@ async function flow(page: Page): Promise<AccountData> {
   ok('page loaded');
 
   step(2, 'Sign up with email');
-  const emailSel = 'input[type=email], input[name=email], input[data-testid=email]';
+  const emailSel = SEL_EMAIL;
   const emailReady = await page.$(emailSel);
   if (!emailReady) {
-    const variants = ['Sign up with email', 'Sign up with Email', 'Continue with email', 'Email'];
+    const variants = TXT_EMAIL_BTN;
     let okClick = false;
     let last = '';
     for (const v of variants) {
@@ -156,10 +157,10 @@ async function flow(page: Page): Promise<AccountData> {
   await fillInput(page, emailSel, addr);
   await page.keyboard.press('Enter');
   try {
-    await page.waitForSelector('input[name=code]', { timeout: 20_000, visible: true });
+    await page.waitForSelector(SEL_CODE, { timeout: 20_000, visible: true });
   } catch {
-    await tryClickText(page, 'Sign up', 3000);
-    await page.waitForSelector('input[name=code]', { timeout: 15_000, visible: true });
+    for (const t of TXT_SUBMIT_BTN) { if (await tryClickText(page, t, 1500)) break; }
+    await page.waitForSelector(SEL_CODE, { timeout: 15_000, visible: true });
   }
   ok('email submitted');
 
@@ -179,10 +180,10 @@ async function flow(page: Page): Promise<AccountData> {
   ok(`OTP: ${code}`);
 
   step(5, 'Submit OTP');
-  await fillInput(page, 'input[name=code]', code);
+  await fillInput(page, SEL_CODE, code);
   await sleep(300);
   await page.keyboard.press('Enter');
-  await page.waitForSelector('input[name=givenName]', { timeout: 20_000, visible: true });
+  await page.waitForSelector(SEL_GIVEN, { timeout: 20_000, visible: true });
   ok('verified');
 
   step(6, 'Fill name & password');
@@ -192,14 +193,14 @@ async function flow(page: Page): Promise<AccountData> {
   const famRaw = parts.length > 1 ? parts[1] : 'AsuKabeh';
   const family = famRaw.charAt(0).toUpperCase() + famRaw.slice(1).toLowerCase();
   wait(`${given} ${family}`);
-  await fillInput(page, 'input[name=givenName]', given);
-  await fillInput(page, 'input[name=familyName]', family);
-  await fillInput(page, 'input[name=password]', PASSWORD);
+  await fillInput(page, SEL_GIVEN, given);
+  await fillInput(page, SEL_FAMILY, family);
+  await fillInput(page, SEL_PASSWORD, PASSWORD);
   ok('form filled');
 
   step(7, 'Solve turnstile & submit');
   let tok = '';
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < TURNSTILE_TIMEOUT_S; i++) {
     tok = await page.evaluate(
       `(() => {
         const el = document.querySelector('input[name=cf-turnstile-response]');
@@ -207,24 +208,26 @@ async function flow(page: Page): Promise<AccountData> {
       })()`,
     ) as string;
     if (tok) break;
+    if (i % 10 === 0 && i > 0) spin(i, `waiting turnstile ${i}s/${TURNSTILE_TIMEOUT_S}s`);
     await sleep(1000);
   }
-  if (!tok) throw new Error('Turnstile timeout 40s');
+  clearLine();
+  if (!tok) throw new Error(`Turnstile timeout ${TURNSTILE_TIMEOUT_S}s`);
   ok('turnstile solved');
 
   const emptyFields = await page.evaluate(
     `(() => {
-      const empty = (s) => { const el = document.querySelector(s); return !el || !el.value; };
+      const empty = (s) => { const el = document.querySelector(s.split(',')[0].trim()); return !el || !el.value; };
       return {
-        given: empty('input[name=givenName]'),
-        family: empty('input[name=familyName]'),
-        password: empty('input[name=password]'),
+        given: empty(${JSON.stringify(SEL_GIVEN)}),
+        family: empty(${JSON.stringify(SEL_FAMILY)}),
+        password: empty(${JSON.stringify(SEL_PASSWORD)}),
       };
     })()`,
   ) as { given: boolean; family: boolean; password: boolean };
-  if (emptyFields.given) await fillInput(page, 'input[name=givenName]', given);
-  if (emptyFields.family) await fillInput(page, 'input[name=familyName]', family);
-  if (emptyFields.password) await fillInput(page, 'input[name=password]', PASSWORD);
+  if (emptyFields.given) await fillInput(page, SEL_GIVEN, given);
+  if (emptyFields.family) await fillInput(page, SEL_FAMILY, family);
+  if (emptyFields.password) await fillInput(page, SEL_PASSWORD, PASSWORD);
 
   const submitSignup = async (): Promise<void> => {
     const clicked = await page.evaluate(
