@@ -38,6 +38,10 @@ if (!TEMPMAIL_PROVIDERS.length) TEMPMAIL_PROVIDERS.push('');
 export const ROUTER9 = envOr('ROUTER9_URL', '');
 export const ROUTER9_PASS = envOr('ROUTER9_PASS', '');
 export const CHROME_PATH = envOr('CHROME_PATH', '');
+// Email pribadi via Cloudflare Worker (gatwib.my.id)
+export const GATWIB_MAIL_WORKER_URL = envOr('GATWIB_MAIL_WORKER_URL', '').replace(/\/$/, '');
+export const GATWIB_MAIL_API_KEY = envOr('GATWIB_MAIL_API_KEY', '');
+export const GATWIB_MAIL_DOMAIN = envOr('GATWIB_MAIL_DOMAIN', 'gatwib.my.id');
 export const HEADLESS = /^(1|true|yes)$/i.test(envOr('HEADLESS', ''));
 
 export interface AccountData {

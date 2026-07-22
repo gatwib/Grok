@@ -13,6 +13,11 @@
  *   GATWIB_MAIL_API_KEY    = <API_KEY yang sama dengan secret Worker>
  *   GATWIB_MAIL_DOMAIN     = gatwib.my.id
  */
+import {
+  GATWIB_MAIL_WORKER_URL as WORKER_URL,
+  GATWIB_MAIL_API_KEY as API_KEY,
+  GATWIB_MAIL_DOMAIN as DOMAIN,
+} from './shared.js';
 
 interface Message {
   id: string;
@@ -36,16 +41,23 @@ interface WorkerMail {
   date: string;
 }
 
-const WORKER_URL = (process.env.GATWIB_MAIL_WORKER_URL || '').replace(/\/$/, '');
-const API_KEY = process.env.GATWIB_MAIL_API_KEY || '';
-const DOMAIN = process.env.GATWIB_MAIL_DOMAIN || 'gatwib.my.id';
-
 function randomLocal(): string {
-  // alamat acak: huruf+angka, 12 char — praktis mustahil bentrok
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  let s = '';
-  for (let i = 0; i < 12; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return s;
+  // alamat gaya nama orang Indonesia: nama.belakang + angka (natural, anti-bentrok)
+  const first = [
+    'budi', 'agus', 'dewi', 'rina', 'putri', 'andi', 'sari', 'dian', 'eka', 'rizki',
+    'yuni', 'fitri', 'joko', 'wawan', 'nur', 'indah', 'bayu', 'hendra', 'ratna', 'adit',
+    'lestari', 'wahyu', 'sinta', 'reza', 'fajar', 'maya', 'galih', 'tika', 'irfan', 'novi',
+    'ahmad', 'siti', 'dwi', 'ayu', 'arif', 'linda', 'yoga', 'citra', 'doni', 'mega',
+  ];
+  const last = [
+    'santoso', 'wijaya', 'saputra', 'pratama', 'nugroho', 'kusuma', 'hidayat', 'permana',
+    'setiawan', 'utomo', 'lestari', 'purnama', 'ramadhan', 'firmansyah', 'gunawan', 'susanto',
+    'wibowo', 'maulana', 'anggraini', 'haryanto', 'suryani', 'prasetyo', 'handoko', 'rahayu',
+  ];
+  const pick = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
+  const sep = Math.random() < 0.5 ? '.' : '';       // budi.santoso atau budisantoso
+  const num = Math.floor(Math.random() * 9000) + 100; // 3-4 digit, mirip tahun/angka acak
+  return `${pick(first)}${sep}${pick(last)}${num}`;
 }
 
 async function fetchInbox(address: string): Promise<WorkerMail[]> {
