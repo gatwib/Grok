@@ -112,18 +112,18 @@ async function runOne(browser: Browser): Promise<AccountData> {
 async function flow(page: Page): Promise<AccountData> {
   step(1, 'Open signup');
   await page.goto(SIGNUP, { waitUntil: 'domcontentloaded', timeout: 60_000 });
-  await sleep(2000);
-  for (let i = 0; i < 15; i++) {
+  // tunggu HANYA kalau ada Cloudflare interstitial (jangan jeda buta).
+  // Cek cepat tiap 500ms, keluar begitu halaman siap (biasanya <1 detik, tak ada CF).
+  for (let i = 0; i < 30; i++) {
     const blocked = await pageLooksBlocked(page);
     if (!blocked) break;
     if (blocked.startsWith('cloudflare block')) throw new Error(blocked);
-    spin(i, `waiting CF ${i + 1}s`);
-    await sleep(1000);
+    if (i % 2 === 0) spin(i, `waiting CF ${Math.floor(i / 2) + 1}s`);
+    await sleep(500);
   }
   clearLine();
-  await tryClickText(page, 'Accept All Cookies', 3000);
-  await tryClickText(page, 'Accept all cookies', 1500);
-  await sleep(500);
+  await tryClickText(page, 'Accept All Cookies', 2000);
+  await tryClickText(page, 'Accept all cookies', 1000);
   const blocked = await pageLooksBlocked(page);
   if (blocked?.startsWith('cloudflare block')) throw new Error(blocked);
   ok('page loaded');
