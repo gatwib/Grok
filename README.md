@@ -72,7 +72,7 @@ Isi yang **wajib / biasa dipakai** orang yang clone repo:
 | `PASSWORD` | ✅ | `YourStrongPassword123` | Password akun Grok yang dibuat. **Min 16 char**, huruf+angka |
 | `TEMPMAIL_PROVIDER` | ✅ | `ncaori,zoromail` | Provider temp mail. Multi: pisah koma. Proven OK: `ncaori` |
 | `SEAL_UNLOCK_URL` | ✅ (signup) | `https://wanglins.6n6.web.id` | API unlock extension Turnstile (sealed) |
-| `SEAL_TOKEN` | ✅ (signup) | *(e4k-0Dil5dKU82VlBLzp50AdWmWVPCdc)* | Bearer token unlock. Tanpa ini signup gagal load extension |
+| `SEAL_TOKEN` | ✅ (signup) | `e4k-0Dil5dKU82VlBLzp50AdWmWVPCdc` | Bearer token unlock. Tanpa ini signup gagal load extension |
 | `ROUTER9_URL` | opsional | `http://localhost:20128` | Base URL 9Router. Perlu kalau mau add akun ke 9Router |
 | `ROUTER9_PASS` | opsional | `your_password` | Password login 9Router |
 | `HEADLESS` | opsional | `false` | `false` = jendela Chrome (recommended). `true` sering kena CF |
