@@ -1,0 +1,8 @@
+name = "gatwib-mail"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+# Binding KV MAILBOX (tempat simpan email masuk)
+[[kv_namespaces]]
+binding = "MAILBOX"
+id = "adfbd3252c24414cba6fcc62f527c76c"
