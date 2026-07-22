@@ -77,6 +77,8 @@ export const GATWIB_MAIL_DOMAIN = envOr('GATWIB_MAIL_DOMAIN', 'gatwib.my.id');
 export const AUTO_ADD_9ROUTER = !/^(0|false|no|off)$/i.test(envOr('AUTO_ADD_9ROUTER', 'true'));
 // Timeout tunggu Turnstile solve (detik) — laptop low-spec butuh lebih lama; default 90
 export const TURNSTILE_TIMEOUT_S = Math.max(20, parseInt(envOr('TURNSTILE_TIMEOUT_S', '90'), 10) || 90);
+// Berapa kali coba ulang Turnstile kalau timeout (reset widget & tunggu lagi); default 3
+export const TURNSTILE_RETRIES = Math.max(1, parseInt(envOr('TURNSTILE_RETRIES', '3'), 10) || 3);
 export const HEADLESS = /^(1|true|yes)$/i.test(envOr('HEADLESS', ''));
 
 export interface AccountData {

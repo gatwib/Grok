@@ -6,7 +6,7 @@ import { mkdirSync, appendFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  PASSWORD, OUT, SIGNUP, AUTO_ADD_9ROUTER, TURNSTILE_TIMEOUT_S,
+  PASSWORD, OUT, SIGNUP, AUTO_ADD_9ROUTER, TURNSTILE_TIMEOUT_S, TURNSTILE_RETRIES,
   SEL_EMAIL, SEL_CODE, SEL_GIVEN, SEL_FAMILY, SEL_PASSWORD, TXT_EMAIL_BTN, TXT_SUBMIT_BTN,
   type AccountData, type Result,
   findChrome, launchChrome, hardenPage, clearBrowserCookies, getAllCookies,
@@ -200,19 +200,38 @@ async function flow(page: Page): Promise<AccountData> {
 
   step(7, 'Solve turnstile & submit');
   let tok = '';
-  for (let i = 0; i < TURNSTILE_TIMEOUT_S; i++) {
-    tok = await page.evaluate(
-      `(() => {
-        const el = document.querySelector('input[name=cf-turnstile-response]');
-        return (el && el.value) || '';
-      })()`,
-    ) as string;
+  const maxTurnstileRetries = TURNSTILE_RETRIES;
+  for (let attempt = 1; attempt <= maxTurnstileRetries && !tok; attempt++) {
+    for (let i = 0; i < TURNSTILE_TIMEOUT_S; i++) {
+      tok = await page.evaluate(
+        `(() => {
+          const el = document.querySelector('input[name=cf-turnstile-response]');
+          return (el && el.value) || '';
+        })()`,
+      ) as string;
+      if (tok) break;
+      if (i % 10 === 0 && i > 0) spin(i, `waiting turnstile ${i}s/${TURNSTILE_TIMEOUT_S}s (try ${attempt}/${maxTurnstileRetries})`);
+      await sleep(1000);
+    }
+    clearLine();
     if (tok) break;
-    if (i % 10 === 0 && i > 0) spin(i, `waiting turnstile ${i}s/${TURNSTILE_TIMEOUT_S}s`);
-    await sleep(1000);
+    // timeout attempt ini — kalau masih ada percobaan, coba "bangunkan" Turnstile
+    if (attempt < maxTurnstileRetries) {
+      wait(`turnstile timeout (try ${attempt}), mencoba ulang...`);
+      // klik area turnstile / reload widget agar challenge di-render ulang
+      await page.evaluate(
+        `(() => {
+          try {
+            const w = document.querySelector('.cf-turnstile, [class*=turnstile]');
+            if (w && typeof w.click === 'function') w.click();
+            if (window.turnstile && typeof window.turnstile.reset === 'function') window.turnstile.reset();
+          } catch (e) {}
+        })()`,
+      ).catch(() => undefined);
+      await sleep(3000);
+    }
   }
-  clearLine();
-  if (!tok) throw new Error(`Turnstile timeout ${TURNSTILE_TIMEOUT_S}s`);
+  if (!tok) throw new Error(`Turnstile timeout ${TURNSTILE_TIMEOUT_S}s x${maxTurnstileRetries} tries`);
   ok('turnstile solved');
 
   const emptyFields = await page.evaluate(
