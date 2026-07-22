@@ -140,14 +140,53 @@ export async function launchChrome(opts: {
   return browser;
 }
 
+// Pool User-Agent konsisten (UA + sec-ch-ua + platform cocok satu sama lain).
+// Rotasi biar tiap akun tampil pakai browser/OS berbeda (anti pola "semua identik").
+interface UAProfile {
+  ua: string;
+  chUa: string;
+  platform: string;
+}
+const UA_POOL: UAProfile[] = [
+  {
+    ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    chUa: '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    platform: '"Windows"',
+  },
+  {
+    ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+    chUa: '"Google Chrome";v="130", "Chromium";v="130", "Not_A Brand";v="99"',
+    platform: '"Windows"',
+  },
+  {
+    ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
+    chUa: '"Google Chrome";v="132", "Chromium";v="132", "Not_A Brand";v="24"',
+    platform: '"Windows"',
+  },
+  {
+    ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+    chUa: '"Google Chrome";v="129", "Chromium";v="129", "Not_A Brand";v="24"',
+    platform: '"Windows"',
+  },
+];
+// CATATAN: sengaja HANYA Windows. Profil macOS/Linux bikin Turnstile GAGAL karena
+// script.js turnstile spoof sinyal ala-Windows -> UA non-Windows = fingerprint tak konsisten = terdeteksi bot.
+// pool yang dikocok — dipakai satu-satu tanpa berulang sampai habis (spt bercocok-tanam randomUA)
+let _uaShuffled: UAProfile[] = [];
+export function pickUA(): UAProfile {
+  if (_uaShuffled.length === 0) {
+    _uaShuffled = [...UA_POOL].sort(() => Math.random() - 0.5);
+  }
+  return _uaShuffled.pop() as UAProfile;
+}
+
 export async function hardenPage(page: Page): Promise<void> {
-  await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-  );
+  const prof = pickUA();
+  await page.setUserAgent(prof.ua);
   await page.setExtraHTTPHeaders({
-    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    'sec-ch-ua': prof.chUa,
     'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"Windows"',
+    'sec-ch-ua-platform': prof.platform,
     'accept-language': 'en-US,en;q=0.9',
   });
   await page.evaluateOnNewDocument(() => {
