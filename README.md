@@ -134,7 +134,7 @@ Menu:
 | Chrome | real Google Chrome via `puppeteer-core` (`CHROME_PATH` optional) |
 | Headless | set `HEADLESS` in `.env` — prefer `false` |
 | Proxy | Jangan — CF block |
-| Turnstile | `turnstile/script.sealed` di repo; plain `script.js` tidak di-publish |
+| Turnstile | `turnstile/script.sealed` |
 | Unlock | butuh net 1x ke `SEAL_UNLOCK_URL` saat start create akun |
 
 ---
@@ -146,7 +146,7 @@ Proyek ini dilisensikan di bawah **Apache License 2.0**.
 Lihat file [`LICENSE`](./LICENSE) untuk teks lengkap.
 
 ```
-Copyright [yyyy] [name of copyright owner]
+Copyright 2026 WangLinS
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
